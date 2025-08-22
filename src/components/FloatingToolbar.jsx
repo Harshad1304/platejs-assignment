@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useEditorRef, useEditorState } from 'platejs/react';
-import { 
-  Bold, 
-  Italic, 
-  Underline, 
-  Strikethrough, 
+import React, { useState, useEffect, useRef } from "react";
+import { useEditorRef, useEditorState } from "platejs/react";
+import {
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
   Heading1,
   Heading2,
   Heading3,
@@ -12,17 +12,17 @@ import {
   Heading5,
   ChevronDown,
   Type,
-  Quote
-} from 'lucide-react';
+  Quote,
+} from "lucide-react";
 
-function FloatingToolbar ({ onVisibilityChange }) {
+function FloatingToolbar({ onVisibilityChange }) {
   const editor = useEditorRef();
   const editorState = useEditorState();
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [showHeadingDropdown, setShowHeadingDropdown] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState('above');
+  const [dropdownPosition, setDropdownPosition] = useState("above");
   const toolbarRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -30,15 +30,22 @@ function FloatingToolbar ({ onVisibilityChange }) {
     const updateToolbarPosition = () => {
       try {
         const selection = window.getSelection();
-        
+
         // Check if there's a selection and it's not empty
-        if (!selection || selection.rangeCount === 0 || selection.isCollapsed || selection.toString().trim() === '') {
+        if (
+          !selection ||
+          selection.rangeCount === 0 ||
+          selection.isCollapsed ||
+          selection.toString().trim() === ""
+        ) {
           setIsVisible(false);
           return;
         }
 
         // Check if the selection is within the editor
-        const editorElement = document.querySelector('[data-slate-editor]') || document.querySelector('[contenteditable="true"]');
+        const editorElement =
+          document.querySelector("[data-slate-editor]") ||
+          document.querySelector('[contenteditable="true"]');
         if (!editorElement) {
           setIsVisible(false);
           return;
@@ -48,8 +55,8 @@ function FloatingToolbar ({ onVisibilityChange }) {
         const range = selection.getRangeAt(0);
         const selectionContainer = range.commonAncestorContainer;
         const isWithinEditor = editorElement.contains(
-          selectionContainer.nodeType === Node.TEXT_NODE 
-            ? selectionContainer.parentNode 
+          selectionContainer.nodeType === Node.TEXT_NODE
+            ? selectionContainer.parentNode
             : selectionContainer
         );
 
@@ -66,14 +73,14 @@ function FloatingToolbar ({ onVisibilityChange }) {
         const toolbarHeight = 44; // Approximate toolbar height
         const spacing = 8; // Space between selection and toolbar
 
-        const left = selectionRect.left + (selectionRect.width / 2);
+        const left = selectionRect.left + selectionRect.width / 2;
         const top = selectionRect.top - toolbarHeight - spacing;
 
         setPosition({ top, left });
         setIsVisible(true);
         setShouldRender(true);
       } catch (error) {
-        console.error('Error updating toolbar position:', error);
+        console.error("Error updating toolbar position:", error);
         setIsVisible(false);
       }
     };
@@ -85,14 +92,14 @@ function FloatingToolbar ({ onVisibilityChange }) {
     };
 
     // Listen for selection changes
-    document.addEventListener('selectionchange', handleSelectionChange);
-    
+    document.addEventListener("selectionchange", handleSelectionChange);
+
     // Also listen for editor state changes
     updateToolbarPosition();
 
     // Cleanup
     return () => {
-      document.removeEventListener('selectionchange', handleSelectionChange);
+      document.removeEventListener("selectionchange", handleSelectionChange);
     };
   }, [editor, editorState]);
 
@@ -103,12 +110,12 @@ function FloatingToolbar ({ onVisibilityChange }) {
       const dropdownHeight = 200; // Approximate dropdown height
       const spaceAbove = toolbarRect.top;
       const spaceBelow = window.innerHeight - toolbarRect.bottom;
-      
+
       // Position dropdown above if there's not enough space below, otherwise below
       if (spaceBelow < dropdownHeight && spaceAbove >= dropdownHeight) {
-        setDropdownPosition('above');
+        setDropdownPosition("above");
       } else {
-        setDropdownPosition('below');
+        setDropdownPosition("below");
       }
     }
   }, [showHeadingDropdown]);
@@ -116,15 +123,19 @@ function FloatingToolbar ({ onVisibilityChange }) {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
-          toolbarRef.current && !toolbarRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        toolbarRef.current &&
+        !toolbarRef.current.contains(event.target)
+      ) {
         setShowHeadingDropdown(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -150,44 +161,45 @@ function FloatingToolbar ({ onVisibilityChange }) {
   useEffect(() => {
     if (isVisible && toolbarRef.current) {
       const toolbarWidth = toolbarRef.current.offsetWidth;
-      setPosition(prev => ({
+      setPosition((prev) => ({
         ...prev,
-        left: prev.left - (toolbarWidth / 2)
+        left: prev.left - toolbarWidth / 2,
       }));
     }
   }, [isVisible]);
-  
+
   const handleButtonClick = (action) => {
-    if (action === 'Bold') {
-      editor.tf.toggleMark('bold');
+    if (action === "Bold") {
+      editor.tf.toggleMark("bold");
     }
-    if (action === 'Italic') {
-      editor.tf.toggleMark('italic');
+    if (action === "Italic") {
+      editor.tf.toggleMark("italic");
     }
-    if (action === 'Underline') {
-      editor.tf.toggleMark('underline');
+    if (action === "Underline") {
+      editor.tf.toggleMark("underline");
     }
-    if (action === 'Strikethrough') {
-      editor.tf.toggleMark('strikethrough');
+    if (action === "Strikethrough") {
+      editor.tf.toggleMark("strikethrough");
     }
-    if (action === 'Blockquote') {
-     console.log('blockquote');
+    if (action === "Blockquote") {
+      editor.tf.blockquote.toggle();
+      
     }
   };
 
   const handleHeadingSelect = (headingLevel) => {
-    // Convert the selected text to the chosen heading
-    console.log(`Convert to ${headingLevel}`);
-    // Example: editor.setNodes({ type: headingLevel });
+    editor.tf[headingLevel].toggle();
+    
     setShowHeadingDropdown(false);
   };
 
   const headingOptions = [
-    { level: 'h1', label: 'Heading 1', icon: <Heading1 size={16} /> },
-    { level: 'h2', label: 'Heading 2', icon: <Heading2 size={16} /> },
-    { level: 'h3', label: 'Heading 3', icon: <Heading3 size={16} /> },
-    { level: 'h4', label: 'Heading 4', icon: <Heading4 size={16} /> },
-    { level: 'h5', label: 'Heading 5', icon: <Heading5 size={16} /> },
+    { level: "h1", label: "Heading 1", icon: <Heading1 size={16} /> },
+    { level: "h2", label: "Heading 2", icon: <Heading2 size={16} /> },
+    { level: "h3", label: "Heading 3", icon: <Heading3 size={16} /> },
+    { level: "h4", label: "Heading 4", icon: <Heading4 size={16} /> },
+    { level: "h5", label: "Heading 5", icon: <Heading5 size={16} /> },
+    { level: "h6", label: "Heading 6", icon: <Heading5 size={16} /> },
   ];
 
   if (!shouldRender) {
@@ -202,50 +214,50 @@ function FloatingToolbar ({ onVisibilityChange }) {
         top: `${position.top}px`,
         left: `${position.left}px`,
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(10px)',
+        transform: isVisible ? "translateY(0)" : "translateY(10px)",
       }}
     >
       <button
-        onClick={() => handleButtonClick('Bold')}
+        onClick={() => handleButtonClick("Bold")}
         className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
         title="Bold"
       >
         <Bold size={16} />
       </button>
-      
+
       <button
-        onClick={() => handleButtonClick('Blockquote')}
+        onClick={() => handleButtonClick("Blockquote")}
         className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
         title="Quote"
       >
         <Quote size={16} />
       </button>
       <button
-        onClick={() => handleButtonClick('Italic')}
+        onClick={() => handleButtonClick("Italic")}
         className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
         title="Italic"
       >
         <Italic size={16} />
       </button>
-      
+
       <button
-        onClick={() => handleButtonClick('Underline')}
+        onClick={() => handleButtonClick("Underline")}
         className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
         title="Underline"
       >
         <Underline size={16} />
       </button>
-      
+
       <button
-        onClick={() => handleButtonClick('Strikethrough')} 
+        onClick={() => handleButtonClick("Strikethrough")}
         className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
         title="Strikethrough"
       >
         <Strikethrough size={16} />
       </button>
-      
+
       <div className="w-px bg-gray-600 mx-1" />
-      
+
       {/* Heading Dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
@@ -254,13 +266,23 @@ function FloatingToolbar ({ onVisibilityChange }) {
           title="Headings"
         >
           <Type size={16} />
-          <ChevronDown size={14} className="transition-transform duration-200" 
-            style={{ transform: showHeadingDropdown ? 'rotate(180deg)' : 'rotate(0)' }} 
+          <ChevronDown
+            size={14}
+            className="transition-transform duration-200"
+            style={{
+              transform: showHeadingDropdown ? "rotate(180deg)" : "rotate(0)",
+            }}
           />
         </button>
-        
+
         {showHeadingDropdown && (
-          <div className={`absolute ${dropdownPosition === 'above' ? 'bottom-full mb-2' : 'top-full mt-2'} left-0 bg-white rounded-md shadow-lg border border-gray-200 py-1.5 min-w-[160px] z-50`}>
+          <div
+            className={`absolute ${
+              dropdownPosition === "above"
+                ? "bottom-full mb-2"
+                : "top-full mt-2"
+            } left-0 bg-white rounded-md shadow-lg border border-gray-200 py-1.5 min-w-[160px] z-50`}
+          >
             <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b border-gray-100 mb-1">
               Headings
             </div>
@@ -283,6 +305,6 @@ function FloatingToolbar ({ onVisibilityChange }) {
       </div>
     </div>
   );
-};
+}
 
 export default FloatingToolbar;

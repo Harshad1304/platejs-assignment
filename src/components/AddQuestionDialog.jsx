@@ -173,7 +173,7 @@ function AddQuestionDialog({ open, onClose, onSubmit, initialValues }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50"
+        className="fixed inset-0 bg-black/40 "
         onClick={onClose}
       />
       
@@ -221,16 +221,6 @@ function AddQuestionDialog({ open, onClose, onSubmit, initialValues }) {
                   Answer Options * (Select the correct answer)
                 </legend>
                 
-                {/* Debug info */}
-                <div className="mb-4 p-3 bg-blue-50 rounded-md">
-                  <p className="text-sm text-blue-800">
-                    <strong>Currently selected:</strong> {formData.correctOptionId || 'None'}
-                  </p>
-                  <p className="text-sm text-blue-600 mt-1">
-                    Click the radio buttons below to select the correct answer
-                  </p>
-                </div>
-
                 <div className="space-y-3">
                   {formData.options.map((option, index) => (
                     <div key={option.id} className="flex items-start space-x-3 p-3 border rounded-lg">

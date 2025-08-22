@@ -21,10 +21,13 @@ function App() {
     ],
     value: [
       {
-        type: "p",
+        type: "h1",
+        
         children: [
           {
-            text: "Hello World",
+            text: "Hey Guys, Welcome to the Classavo!!",
+            bold: true,
+            italic: true,
           },
         ],
       },
@@ -127,11 +130,14 @@ function App() {
 
   return (
     <Plate editor={editor}>
-      <PlateContent
-        className="pt-20 px-32 min-h-screen bg-blue-100"
-        placeholder="Type your amazing content here..."
-        renderElement={(props) => elementToComponent(props.element, props)}
-      />
+      <div className="min-h-screen ">
+        <PlateContent
+          className=" min-h-screen border-none pt-20 px-32 outline-none focus:outline-none"
+          placeholder="Type your amazing content here..."
+          renderElement={(props) => elementToComponent(props.element, props)}
+        />
+      </div>
+      
       <FloatingPlusButton 
         onAddContent={handleAddContent} 
         isFloatingToolbarVisible={isFloatingToolbarVisible}
