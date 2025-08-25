@@ -33,9 +33,13 @@ import {
 } from "../components/plateElements/HeadingElements";
 import { SlashInputPlugin, SlashPlugin } from "@platejs/slash-command/react";
 import { KEYS } from "platejs";
+import { IndentPlugin } from '@platejs/indent/react';
+import { ListPlugin } from '@platejs/list/react';
 import SlashInputElement from "../components/plateElements/SlashInputElement";
 
 export const plugins = [
+  IndentPlugin,
+  ListPlugin,
   BlockquotePlugin.configure({
     node: { component: BlockquoteElement },
     shortcuts: { toggle: "mod+shift+." },

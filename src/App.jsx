@@ -21,16 +21,15 @@ function App() {
     ],
     value: [
       {
-        type: "h1",
+        type: "p",
         
         children: [
           {
-            text: "Hey Guys, Welcome to the Classavo!!",
-            bold: true,
-            italic: true,
+            text: "",
           },
         ],
       },
+     
     ],
   });
 
@@ -133,7 +132,7 @@ function App() {
       <div className="min-h-screen ">
         <PlateContent
           className=" min-h-screen border-none pt-20 px-32 outline-none focus:outline-none"
-          placeholder="Type your amazing content here..."
+          placeholder="Hey Genz's Welcome To Classavo Start Writing"
           renderElement={(props) => elementToComponent(props.element, props)}
         />
       </div>
