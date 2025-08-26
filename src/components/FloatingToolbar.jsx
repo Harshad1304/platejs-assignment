@@ -28,6 +28,24 @@ function FloatingToolbar({ onVisibilityChange }) {
   const [dropdownPosition, setDropdownPosition] = useState("above");
   const toolbarRef = useRef(null);
   const dropdownRef = useRef(null);
+  
+  // Check if marks are active
+  const isMarkActive = (mark) => {
+    try {
+      return editor.api.mark(mark);
+    } catch (error) {
+      return false;
+    }
+  };
+
+  // Check if block types are active
+  const isBlockActive = (blockType) => {
+    try {
+      return editor.api.element(blockType);
+    } catch (error) {
+      return false;
+    }
+  };
 
   useEffect(() => {
     const updateToolbarPosition = () => {
@@ -70,7 +88,6 @@ function FloatingToolbar({ onVisibilityChange }) {
 
         // Get selection bounds
         const selectionRect = range.getBoundingClientRect();
-        const editorRect = editorElement.getBoundingClientRect();
 
         // Calculate toolbar position (above the selection)
         const toolbarHeight = 44; // Approximate toolbar height
@@ -213,6 +230,15 @@ function FloatingToolbar({ onVisibilityChange }) {
     { level: "h6", label: "Heading 6", icon: <Heading5 size={16} /> },
   ];
 
+  // Helper function to get button className with active state
+  const getButtonClassName = (isActive) => {
+    return `p-2 text-white rounded transition-colors duration-150 ${
+      isActive 
+        ? "bg-blue-600 hover:bg-blue-700" 
+        : "hover:bg-gray-700"
+    }`;
+  };
+
   if (!shouldRender) {
     return null;
   }
@@ -230,7 +256,7 @@ function FloatingToolbar({ onVisibilityChange }) {
     >
       <button
         onClick={() => handleButtonClick("Bold")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isMarkActive("bold"))}
         title="Bold"
       >
         <Bold size={16} />
@@ -238,14 +264,14 @@ function FloatingToolbar({ onVisibilityChange }) {
 
       <button
         onClick={() => handleButtonClick("Blockquote")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isBlockActive("blockquote"))}
         title="Quote"
       >
         <Quote size={16} />
       </button>
       <button
         onClick={() => handleButtonClick("Italic")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isMarkActive("italic"))}
         title="Italic"
       >
         <Italic size={16} />
@@ -253,7 +279,7 @@ function FloatingToolbar({ onVisibilityChange }) {
 
       <button
         onClick={() => handleButtonClick("Underline")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isMarkActive("underline"))}
         title="Underline"
       >
         <Underline size={16} />
@@ -261,28 +287,28 @@ function FloatingToolbar({ onVisibilityChange }) {
 
       <button
         onClick={() => handleButtonClick("Strikethrough")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isMarkActive("strikethrough"))}
         title="Strikethrough"
       >
         <Strikethrough size={16} />
       </button>
       <button
         onClick={() => handleButtonClick("BulletedList")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isMarkActive("ul"))}
         title="Bulleted List"
       >
         <List size={16} />
       </button>
       <button
         onClick={() => handleButtonClick("NumberedList")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isBlockActive("ol"))}
         title="Numbered List"
       >
         <ListOrdered size={16} />
       </button>
       {/* <button
         onClick={() => handleButtonClick("TaskList")}
-        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        className={getButtonClassName(isBlockActive("taskList"))}
         title="Task List"
       >
         <ListTodo size={16} />

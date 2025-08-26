@@ -37,7 +37,6 @@ const FloatingCaretButton = ({ onAddContent }) => {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
     const editorElements = editor.children.filter(el => el.type === "code-block");
-    console.log(editorElements);
     
   useEffect(() => {
     const updateVisibility = () => {

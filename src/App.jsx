@@ -161,12 +161,16 @@ function App() {
       children: [{ text: "" }],
     };
 
-   
-    editor.tf.insertNodes(codeBlockElement);
+    // Insert the code block first and get its path
+    const codePath = editor.api.end([]).path;
+    editor.tf.insertNodes(codeBlockElement, { at: codePath });
 
-    
-    // Insert paragraph at root after code bl
-    editor.tf.insertNodes(paragraphElement);
+    // Calculate where to insert the paragraph (after the code block)
+    const newPath = [...codePath];
+    newPath[newPath.length - 1] += 1;
+
+    // Insert paragraph at root after code block
+    editor.tf.insertNodes(paragraphElement, { at: newPath, select: true });
 
     setOpenCodeDialog(false);
   };
@@ -180,7 +184,7 @@ function App() {
         <Header />
 
         {/* Main editor container */}
-        <div className="relative z-10 px-4 md:px-6 pb-12">
+        <div className="relative z-10 px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
             <div className="relative min-h-[calc(100vh-10rem)] border border-slate-700/50 shadow-2xl rounded-2xl bg-slate-800/80 backdrop-blur-sm p-6 md:p-8 lg:p-12 transition-all duration-300 hover:shadow-blue-500/10 hover:shadow-2xl focus-within:border-blue-500/50 focus-within:ring-2 focus-within:ring-blue-500/20">
               {isLoading && <Loader />}

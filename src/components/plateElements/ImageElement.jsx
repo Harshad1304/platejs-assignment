@@ -5,7 +5,7 @@ const ImageElement = ({ attributes, children, element }) => {
     <div 
     {...attributes} 
     contentEditable={false} 
-    className=""
+    className="w-[50%] mx-auto"
   >
     <img 
       src={element.url} 
