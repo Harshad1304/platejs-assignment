@@ -13,6 +13,9 @@ import {
   ChevronDown,
   Type,
   Quote,
+  List,
+  ListOrdered,
+  ListTodo,
 } from "lucide-react";
 
 function FloatingToolbar({ onVisibilityChange }) {
@@ -181,10 +184,18 @@ function FloatingToolbar({ onVisibilityChange }) {
     if (action === "Strikethrough") {
       editor.tf.toggleMark("strikethrough");
     }
-    if (action === "Blockquote") {
-      editor.tf.blockquote.toggle();
-      
-    }
+      if (action === "Blockquote") {
+        editor.tf.blockquote.toggle();
+      }
+      if (action === "BulletedList") {
+        editor.tf.ul.toggle();
+      }
+      if (action === "NumberedList") {
+        editor.tf.ol.toggle();
+      }
+      // if (action === "TaskList") {
+      //   editor.tf.taskList.toggle();
+      // }
   };
 
   const handleHeadingSelect = (headingLevel) => {
@@ -255,6 +266,27 @@ function FloatingToolbar({ onVisibilityChange }) {
       >
         <Strikethrough size={16} />
       </button>
+      <button
+        onClick={() => handleButtonClick("BulletedList")}
+        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        title="Bulleted List"
+      >
+        <List size={16} />
+      </button>
+      <button
+        onClick={() => handleButtonClick("NumberedList")}
+        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        title="Numbered List"
+      >
+        <ListOrdered size={16} />
+      </button>
+      {/* <button
+        onClick={() => handleButtonClick("TaskList")}
+        className="p-2 text-white hover:bg-gray-700 rounded transition-colors duration-150"
+        title="Task List"
+      >
+        <ListTodo size={16} />
+      </button> */}
 
       <div className="w-px bg-gray-600 mx-1" />
 

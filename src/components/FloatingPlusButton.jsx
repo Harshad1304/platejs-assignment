@@ -4,11 +4,8 @@ import {
   Plus, 
   Image, 
   Code, 
-  Quote, 
-  Minus,
   HelpCircle,
   ChevronRight,
-  Type
 } from 'lucide-react';
 
 const FloatingPlusButton = ({ onAddContent, isFloatingToolbarVisible }) => {

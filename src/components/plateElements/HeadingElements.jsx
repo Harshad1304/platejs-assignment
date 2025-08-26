@@ -21,7 +21,7 @@ export const H1Element = ({ attributes, children, element }) => {
   }, [isEmpty, editor, element]);
 
   return (
-    <h1 {...attributes} className="relative text-3xl text-gray-900">
+    <h1 {...attributes} className="relative text-3xl font-bold text-white">
       {isEmpty && (
         <span
           contentEditable={false}
@@ -61,7 +61,7 @@ export const H2Element = ({ attributes, children, element }) => {
     <h2
       {...attributes}
       data-id={element.id}
-      className="relative text-2xl text-gray-800"
+      className="relative text-2xl font-bold text-white"
     >
       {isEmpty && (
         <span
@@ -99,7 +99,7 @@ export const H3Element = ({ attributes, children, element }) => {
   }, [isEmpty, editor, element]);
 
   return (
-    <h3 {...attributes} className="relative text-xl text-gray-700">
+    <h3 {...attributes} className="relative text-xl font-bold text-white">
       {isEmpty && (
         <span
           contentEditable={false}
@@ -136,7 +136,7 @@ export const H4Element = ({ attributes, children, element }) => {
   }, [isEmpty, editor, element]);
 
   return (
-    <h4 {...attributes} className="relative text-lg text-gray-700">
+    <h4 {...attributes} className="relative text-lg font-bold text-white">
       {isEmpty && (
         <span
           contentEditable={false}
@@ -173,7 +173,7 @@ export const H5Element = ({ attributes, children, element }) => {
   }, [isEmpty, editor, element]);
 
   return (
-    <h5 {...attributes} className="relative text-base text-gray-600">
+    <h5 {...attributes} className="relative text-base font-bold text-white">
       {isEmpty && (
         <span
           contentEditable={false}
@@ -210,7 +210,7 @@ export const H6Element = ({ attributes, children, element }) => {
   }, [isEmpty, editor, element]);
 
   return (
-    <h6 {...attributes} className="relative text-sm text-gray-600">
+      <h6 {...attributes} className="relative text-sm font-bold text-white">
       {isEmpty && (
         <span
           contentEditable={false}

@@ -1,51 +1,66 @@
 import React, { useState, useRef } from "react";
 import { Plate, PlateContent, useElement, usePlateEditor } from "platejs/react";
 import FloatingPlusButton from "./components/FloatingPlusButton";
+import FloatingCaretButton from "./components/FloatingCaretButton";
 import AddQuestionDialog from "./components/AddQuestionDialog";
 import AddCodeDialog from "./components/AddCodeDialog";
 import { elementToComponent } from "./hooks/ElementsToComponent";
 import FloatingToolbar from "./components/FloatingToolBar";
 import { plugins } from "./utils/plugins";
+import Header from "./components/Header";
+import DarkAnimatedBackground from "./components/animation/DarkAnimatedBackground";
+import Loader from "./components/Loader";
+import Footer from "./components/Footer";
 
 function App() {
- 
 
+  // Dialog states
   const [openQuestionsDialog, setOpenQuestionsDialog] = useState(false);
   const [openCodeDialog, setOpenCodeDialog] = useState(false);
-  const [isFloatingToolbarVisible, setIsFloatingToolbarVisible] = useState(false);
+
+  // Floating toolbar related states
+  const [isFloatingToolbarVisible, setIsFloatingToolbarVisible] =
+    useState(false);
+  
+  // Loading state
+  const [isLoading, setIsLoading] = useState(false);
+
+  // File input ref for image upload
   const fileInputRef = useRef(null);
 
+
   const editor = usePlateEditor({
-    plugins: [
-     ...plugins
-    ],
+    plugins: [...plugins],
     value: [
       {
         type: "p",
-        
         children: [
           {
-            text: "",
+            text: "Hello, Welcome to Classavo",
           },
         ],
       },
-     
     ],
   });
 
-  const handleImageUpload = (event) => {
+  console.log(" Editor ", editor.children);
+
+  const handleImageUpload =  (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith("image/")) {
+      setIsLoading(true);
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target.result;
-        editor.insertNode({
+        const endPoint = editor.api.end([]);
+        editor.tf.select(endPoint);
+        editor.tf.insertNode({
           type: "img",
           url: imageUrl,
           alt: file.name || "Uploaded Image",
           children: [{ text: "" }],
         });
-        editor.insertNode({
+        editor.tf.insertNode({
           type: "p",
           children: [
             {
@@ -53,6 +68,7 @@ function App() {
             },
           ],
         });
+        setIsLoading(false);
       };
       reader.readAsDataURL(file);
     }
@@ -67,9 +83,33 @@ function App() {
     } else if (optionType === "code") {
       setOpenCodeDialog(true);
     } else if (optionType === "quote") {
-      console.log("quote");
+      // Add quote functionality
+      const endPoint = editor.api.end([]);
+      editor.tf.select(endPoint);
+      editor.tf.insertNode({
+        type: "blockquote",
+        children: [
+          {
+            text: "Enter your quote here...",
+          },
+        ],
+      });
+      editor.tf.insertNode({
+        type: "p",
+        children: [{ text: "" }],
+      });
     } else if (optionType === "divider") {
-      console.log("divider");
+      // Add divider functionality
+      const endPoint = editor.api.end([]);
+      editor.tf.select(endPoint);
+      editor.tf.insertNode({
+        type: "hr",
+        children: [{ text: "" }],
+      });
+      editor.tf.insertNode({
+        type: "p",
+        children: [{ text: "" }],
+      });
     }
   };
 
@@ -97,8 +137,11 @@ function App() {
         explanation: mcqData.explanation,
       },
     };
-    editor.insertNode(mcqElement);
-    editor.insertNode(paragraphElement);
+    const endPoint = editor.api.end([]);
+    editor.tf.select(endPoint);
+    editor.tf.insertNode(mcqElement);
+    editor.tf.insertNode(paragraphElement);
+    setOpenQuestionsDialog(false);
   };
 
   const handleSubmitCode = (codeData) => {
@@ -115,60 +158,92 @@ function App() {
 
     const paragraphElement = {
       type: "p",
-      children: [
-        {
-          text: "",
-        },
-      ],
+      children: [{ text: "" }],
     };
-    editor.insertNode(codeBlockElement);
-    editor.children.push(paragraphElement);
-  };
 
-  
+   
+    editor.tf.insertNodes(codeBlockElement);
+
+    
+    // Insert paragraph at root after code bl
+    editor.tf.insertNodes(paragraphElement);
+
+    setOpenCodeDialog(false);
+  };
 
   return (
     <Plate editor={editor}>
-      <div className="min-h-screen ">
-        <PlateContent
-          className=" min-h-screen border-none pt-20 px-32 outline-none focus:outline-none"
-          placeholder="Hey Genz's Welcome To Classavo Start Writing"
-          renderElement={(props) => elementToComponent(props.element, props)}
-        />
-      </div>
-      
-      <FloatingPlusButton 
-        onAddContent={handleAddContent} 
-        isFloatingToolbarVisible={isFloatingToolbarVisible}
-      />
-      <FloatingToolbar 
-        onVisibilityChange={setIsFloatingToolbarVisible}
-      />
-      {openQuestionsDialog && (
-        <AddQuestionDialog
-          open={openQuestionsDialog}
-          onClose={() => setOpenQuestionsDialog(false)}
-          onSubmit={handleSubmitMCQ}
-        />
-      )}
-      {openCodeDialog && (
-        <AddCodeDialog
-          open={openCodeDialog}
-          onClose={() => setOpenCodeDialog(false)}
-          onSubmit={handleSubmitCode}
-        />
-      )}
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Background Animation  */}
+        <DarkAnimatedBackground />
+        {/* Header */}
+        <Header />
 
-      {/* This is our hidden file input for image upload */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        style={{ display: "none" }}
-      />
-      {/* <MCQCard /> */}
+        {/* Main editor container */}
+        <div className="relative z-10 px-4 md:px-6 pb-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative min-h-[calc(100vh-10rem)] border border-slate-700/50 shadow-2xl rounded-2xl bg-slate-800/80 backdrop-blur-sm p-6 md:p-8 lg:p-12 transition-all duration-300 hover:shadow-blue-500/10 hover:shadow-2xl focus-within:border-blue-500/50 focus-within:ring-2 focus-within:ring-blue-500/20">
+              {isLoading && <Loader />}
+
+              <PlateContent
+                className="border-none outline-none"
+                placeholder="✨ Hey Gen Z! Welcome to Classavo - Start creating amazing content..."
+                renderElement={(props) =>
+                  elementToComponent(props.element, props)
+                }
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#e2e8f0",
+                }}
+              />
+
+              {/* Word count and status bar */}
+              <div className="absolute bottom-4 left-6 text-xs text-gray-500 bg-slate-800/80 backdrop-blur-sm px-3 py-1 rounded-full">
+                <span>Ready to create</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Buttons */}
+        <FloatingCaretButton onAddContent={handleAddContent} />
+        <FloatingToolbar onVisibilityChange={setIsFloatingToolbarVisible} />
+
+        {openQuestionsDialog && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <AddQuestionDialog
+              open={openQuestionsDialog}
+              onClose={() => setOpenQuestionsDialog(false)}
+              onSubmit={handleSubmitMCQ}
+            />
+          </div>
+        )}
+
+        {openCodeDialog && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <AddCodeDialog
+              open={openCodeDialog}
+              onClose={() => setOpenCodeDialog(false)}
+              onSubmit={handleSubmitCode}
+            />
+          </div>
+        )}
+
+        {/* Hidden file input for image upload */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          style={{ display: "none" }}
+        />
+
+        {/* Footer */}
+        <Footer />
+      </div>
     </Plate>
   );
 }
+
 export default App;

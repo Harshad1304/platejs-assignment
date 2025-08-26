@@ -15,7 +15,7 @@ const MCQElement = ({ attributes, children, element }) => {
   const handleEditQuestion = (updatedData) => {
     if (!editor) return;
     
-    // Method 1: Update specific element properties (recommended for individual elements)
+   
     try {
       const path = editor.findPath(element);
       console.log(path)

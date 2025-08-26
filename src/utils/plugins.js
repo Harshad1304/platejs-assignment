@@ -32,14 +32,26 @@ import {
   H6Element,
 } from "../components/plateElements/HeadingElements";
 import { SlashInputPlugin, SlashPlugin } from "@platejs/slash-command/react";
+import { ListPlugin, BulletedListPlugin, NumberedListPlugin, TaskListPlugin, ListItemPlugin } from '@platejs/list-classic/react'
 import { KEYS } from "platejs";
-import { IndentPlugin } from '@platejs/indent/react';
-import { ListPlugin } from '@platejs/list/react';
 import SlashInputElement from "../components/plateElements/SlashInputElement";
+import { BulletedListElement, NumberedListElement, TaskListElement } from "../components/plateElements/ListElements";
 
 export const plugins = [
-  IndentPlugin,
   ListPlugin,
+  BulletedListPlugin.configure({
+    node: { component: BulletedListElement },
+    shortcuts: { toggle: { keys: 'mod+alt+5' } },
+  }),
+  NumberedListPlugin.configure({
+    node: { component: NumberedListElement },
+    shortcuts: { toggle: { keys: 'mod+alt+6' } },
+  }),
+  TaskListPlugin.configure({
+    node: { component: TaskListElement },
+    shortcuts: { toggle: { keys: 'mod+alt+7' } },
+  }),
+  ListItemPlugin,
   BlockquotePlugin.configure({
     node: { component: BlockquoteElement },
     shortcuts: { toggle: "mod+shift+." },
@@ -103,13 +115,16 @@ export const plugins = [
   UnderlinePlugin,
   StrikethroughPlugin,
   ImagePlugin.withComponent(ImageElement),
+
   CodeBlockPlugin.configure({
     node: { component: CodeBlockElement },
     options: { lowlight, defaultLanguage: "js" },
     shortcuts: { toggle: { keys: "mod+alt+8" } },
   }),
+
   CodeLinePlugin.withComponent(CodeLineElement),
   CodeSyntaxPlugin.withComponent(CodeSyntaxLeaf),
+
   SlashPlugin.configure({
     options: {
       trigger: '/',
@@ -120,5 +135,7 @@ export const plugins = [
         }),
     },
   }),
+
   SlashInputPlugin.withComponent(SlashInputElement),
+  
 ];

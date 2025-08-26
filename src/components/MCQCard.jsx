@@ -28,7 +28,7 @@ const MCQCard = ({data, onEdit}) => {
   const isCorrect = selectedOption === data.correctOptionId;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className=" p-6 bg-white rounded-lg shadow-lg w-full">
       <div className="flex justify-between items-center mb-4">
         <div className="text-sm text-gray-500">
             <button className="text-blue-500 hover:text-blue-600 cursor-pointer p-2" onClick={()=>onEdit(data)}>Edit</button>

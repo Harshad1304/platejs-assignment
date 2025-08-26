@@ -14,6 +14,7 @@
     "@platejs/basic-nodes": "^49.0.0",
     "@platejs/code-block": "^49.0.0",
     "@platejs/combobox": "^49.0.0",
+    "@platejs/floating": "^49.0.0",
     "@platejs/indent": "^49.0.0",
     "@platejs/list": "^49.2.17",
     "@platejs/list-classic": "^49.1.0",
